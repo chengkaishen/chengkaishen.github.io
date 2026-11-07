@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Physics-Informed Machine Learning for Interpretable Fault Diagnosis in PMSM-Driven Belt Transmission Systems — Chengkai Shen</title>
+  <meta name="description" content="Master’s thesis at ABB Corporate Research and TUM: physics-informed neural networks and sparse identification for interpretable fault diagnosis of a servo-driven belt transmission, using only drive signals — Chengkai Shen.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;1,400&family=Source+Code+Pro:wght@400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="container navbar-inner">
+      <a class="brand" href="../index.html">Chengkai Shen</a>
+      <div class="nav-links">
+        <a href="../index.html">Home</a>
+        <a href="../index.html#publications">Publications</a>
+        <a href="../index.html#projects">Projects</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container" id="top">
+
+    <a class="back-link" href="../index.html#projects">← All projects</a>
+
+    <article class="card project-page">
+
+      <!-- Head -->
+      <header class="project-head is-single">
+        <div>
+          <h1 class="project-title">Physics-Informed Machine Learning for Interpretable Fault Diagnosis in PMSM-Driven Belt Transmission Systems</h1>
+          <p class="project-sub">Master’s thesis · ABB Corporate Research × TUM Institute of Flight System Dynamics · 2026</p>
+        </div>
+      </header>
+
+      <!-- Motivation + approach -->
+      <div class="project-text">
+        <p>Servo drives already measure motor current and rotor position. In my Master’s thesis I asked whether these signals alone are enough to diagnose mechanical faults in a motor-driven belt transmission. The goal was to detect changes in mechanical behaviour from current and encoder data and to link them to physically meaningful fault signatures, without installing extra sensors.</p>
+        <p>Both methods I developed follow the same idea. The model first learns how the healthy system behaves and then identifies the additional dynamics that a fault introduces. I started from a physical model of the rotor dynamics and used physics-informed neural networks (PINNs) to estimate the inertia and friction parameters, which define the healthy baseline. Sparse identification then selects a small number of candidate terms to explain how the measured behaviour deviates from this baseline.</p>
+        <p>The first method identifies the healthy dynamics from rotational speed. For diagnosis, it computes the residual between the measurements and the healthy model and fits it with sparse regression in a separate step. This captured the dominant fault signatures. However, the numerical differentiation it relies on amplified measurement noise, so some unnecessary terms were retained.</p>
+      </div>
+
+      <figure class="project-figure is-mid">
+        <a href="../images/abb/workflow-speed.png" target="_blank" rel="noopener"><img src="../images/abb/workflow-speed.png" alt="Workflow of the speed-based method: PINN-based healthy-system identification followed by sparse regression on the residual" loading="lazy"></a>
+        <figcaption>Speed-based method</figcaption>
+      </figure>
+
+      <div class="project-text">
+        <p>While finishing the first method, I saw that sparse fault identification could be built into the PINN itself, with the fault terms treated as an extension of the healthy dynamics. Healthy-system identification and fault identification would then share the same model and the same optimisation. The second method is built on this idea and works directly with the encoder angle. The network represents the angle by its sine and cosine, which avoids a jump at every full revolution. Derivatives come from automatic differentiation, and the fault terms are selected during training.</p>
+      </div>
+
+      <figure class="project-figure is-mid">
+        <a href="../images/abb/workflow-angle.png" target="_blank" rel="noopener"><img src="../images/abb/workflow-angle.png" alt="Workflow of the angle-based method: PINN with sine/cosine angle output, healthy-system identification and integrated sparse fault identification" loading="lazy"></a>
+        <figcaption>Angle-based method</figcaption>
+      </figure>
+
+      <div class="project-text">
+        <p>To test both methods, I designed and ran experiments on a servo-driven toothed-belt test bench with a 1:3 transmission ratio. The measurements covered healthy operation, parallel shaft misalignment and localised tooth interference, each under start–stop motions and constant-speed profiles. All identification and diagnosis used only signals from the servo drive.</p>
+      </div>
+
+      <figure class="project-figure is-mid">
+        <a href="../images/abb/test-bench.jpg" target="_blank" rel="noopener"><img src="../images/abb/test-bench.jpg" alt="Servo-driven toothed-belt test bench" loading="lazy"></a>
+        <figcaption>Servo-driven toothed-belt test bench</figcaption>
+      </figure>
+
+      <div class="project-text">
+        <p>For both methods, forward simulations of the healthy models stayed below 3% relative speed error on most of the 70 healthy trajectories. The two methods differed mainly in fault identification. The angle-based method kept fewer terms and gave clearer physical signatures. Tooth interference, for example, produced fractional-order harmonics associated with the slower rotation of the load-side pulley. Their link to the 1:3 transmission ratio gives the identified terms a direct physical interpretation.</p>
+        <p>The thesis combined physical modelling, machine learning and experiments to explain fault-related deviations with a few interpretable model terms. So far, the methods have only been evaluated offline on one test bench. Online monitoring and a wider range of operating conditions remain open for future work.</p>
+      </div>
+
+      <!-- Download -->
+      <p class="project-download">
+        <a href="../files/master-thesis-chengkai-shen.pdf" target="_blank" rel="noopener">Master’s thesis (PDF, 11.6 MB)</a>
+      </p>
+
+      <p class="project-ack small">Many thanks to Dr. Chen Song and Dr. Joachim Weißbacher from ABB, and to Dr. Agnes Steinert and Zoe Mbikayi, M.Sc. from the TUM Institute of Flight System Dynamics, for their guidance.</p>
+
+    </article>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <em>Last updated: Nov 2026</em>
+      <span>&copy; 2026 Chengkai Shen</span>
+    </div>
+  </footer>
+
+</body>
+</html>
